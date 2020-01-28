@@ -5,6 +5,7 @@ var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
+
 // récupération de la saisie utilisateur 
 rl.question('Vous allez bien ? : ', function (saisie) {
     // la variable `saisie` contient la saisie effectuée     
