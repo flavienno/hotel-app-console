@@ -1,4 +1,4 @@
-
+var service = require('./service');
 // récupération du module `readline` 
 var readline = require('readline');
 // création d'un objet `rl` permettant de récupérer la saisie utilisateur 
@@ -14,17 +14,28 @@ function startMenu() {
     `;
 
     // récupération de la saisie utilisateur 
-    rl.question(menu, function (saisie) {
+    rl.question(menu, function (choix) {
+        console.log(`Vous avez saisi : ${choix}`);
 
-        if (saisie === '99') {
-            console.log('Au revoir')   
+        if (choix === '99') {
+            console.log('Au revoir')
             rl.close();
-            
-        } else if (saisie === '1') {
-            console.log('>> Liste des clients');    
+
+        } else if (choix === '1') {
+            service.listerClients(function (erreur) {
+                console.log("Erreur")
+            },
+                (function (data) {
+                    console.log('>> Liste des clients');
+                    //ici on a eu la réponse les données st ds data
+                    data.forEach(element => {
+                        console.log(element.nom, " ", element.prenoms)
+                    });
+                    startMenu();
+                }));
         }
 
-    })
+    });
 }
 
 startMenu();
