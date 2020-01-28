@@ -16,7 +16,8 @@ function startMenu() {
     // récupération de la saisie utilisateur 
     rl.question(menu, function (saisie) {
 
-        if (saisie === '99') {   
+        if (saisie === '99') {
+            console.log('Au revoir')   
             rl.close();
             
         } else if (saisie === '1') {
