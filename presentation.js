@@ -1,15 +1,17 @@
-var service = require('./service');
-// récupération du module `readline` 
-var readline = require('readline');
-// création d'un objet `rl` permettant de récupérer la saisie utilisateur 
-var rl = readline.createInterface({
+const Service = require('./service');
+const service = new Service();
+
+const readline = require('readline');
+const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
 function startMenu() {
-    var menu = `Veuillez faire un choix ? :
+    const menu = `Veuillez faire un choix ? :
     1. Liste des clients
+    2. Ajouter un client
+    3. Chercher un client par son nom
     99. Quitter
     `;
 
@@ -22,21 +24,52 @@ function startMenu() {
             rl.close();
 
         } else if (choix === '1') {
-            service.listerClients(function (erreur) {
-                console.log("Erreur")
-            },
-                (function (data) {
-                    console.log('>> Liste des clients');
-                    //ici on a eu la réponse les données st ds data
-                    data.forEach(element => {
-                        console.log(element.nom, " ", element.prenoms)
+            console.log(">>> Liste des Clients");
+
+            service.listerClients().then(listeClient => {
+                listeClient.forEach(client => {
+                    console.log(`${client.nom} ${client.prenoms}`);
+                })
+                startMenu();
+            }
+            ).catch(error => console.log(error));
+
+
+        } else if (choix === '2') {
+            console.log(">>> Vous allez ajouter un client");
+
+            rl.question("Veuillez saisir un nom ", function (nom) {
+                rl.question("Veuillez saisir un prénom 3", function (prenom) {
+
+                    service.ajouterClient(nom, prenom).then(
+                        reponse => {
+                            console.log(reponse);
+
+                        }
+                    ).catch(error => {
+                        console.log(error.message);
+                        startMenu();
                     });
+                });
+            });
+        } else if (choix === '3') {
+            console.log(">>> Recherche d'un client par son nom");
+
+            rl.question("Veuillez saisir un nom ", function (nom) {
+                service.chercherParNom(nom).then(listeClient => {
+                    listeClient.forEach(client => {
+                        console.log(`${client.nom} ${client.prenoms}`);
+                    })
+                }).catch(error => {
+                    console.log(error.message);
                     startMenu();
-                }));
+                });
+            });
+
         }
 
     });
 }
 
-startMenu();
+
 exports.startMenu = startMenu;

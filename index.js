@@ -1,3 +1,3 @@
 console.log('** Administration Hotel **');
-var presentation=require("./presentation");
+const presentation=require("./presentation");
 presentation.startMenu();

@@ -1,12 +1,23 @@
-var request = require('request');
+const requestPromise = require('request-promise-native');
 
-// technique du callback
-function listerClients(callbackEr, callbackFn) {
-    request('https://fla-hotel-web-api.herokuapp.com/clients', { json: true }, function (err, res, data) {
-        if (err) { callbackEr(err) }
-        else {
-            callbackFn(data);
-        }
-    });
+class Service{
+constructor(){};
+
+
+  listerClients() {
+    return requestPromise('https://fla-hotel-web-api.herokuapp.com/clients', { json: true })
+    
+
+  }
+
+  ajouterClient (nom, prenom) {
+    return requestPromise.post('https://fla-hotel-web-api.herokuapp.com/clients', { json: { "nom": nom, "prenoms": prenom } });
+  }
+
+  chercherParNom ( nom) {
+    return requestPromise('https://fla-hotel-web-api-app.herokuapp.com/clients?nom=${nom}', { json: true })
+        
+  }
 }
-exports.listerClients = listerClients;
+
+module.exports = Service;
